@@ -1,6 +1,6 @@
 
 
-from sqlalchemy import String, Column, Integer, Unicode, Date
+from sqlalchemy import String, Column, Integer, Unicode, Date, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -24,6 +24,7 @@ class Expenses(Base):
 
     id = Column('id', Integer, primary_key=True, autoincrement=True)
     claim_name = Column('claim_name', String)
+    claim_id = Column('claim_id', Integer)
     pay_date = Column('pay_date', Date)
     subitem = Column('subitem', String)
     turnover_date = Column('turnover_date', Date)
@@ -35,3 +36,7 @@ class Expenses(Base):
     payment_type = Column('payment_type', String)
     project = Column('project', String)
     project_id = Column('project_id', Integer)
+    organization = Column('organization', String)
+    has_photo_confirmation = Column('has_photo_confirmation', Boolean)
+    initiator = Column("initiator", String)
+    # template_name = Column("template_name", String)

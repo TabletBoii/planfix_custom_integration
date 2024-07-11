@@ -1,6 +1,6 @@
 import os
 import requests
-from sqlalchemy import insert
+from sqlalchemy import insert, text
 from sqlalchemy.orm import Session
 
 from models.models import FofExpenses
@@ -62,5 +62,6 @@ class DirectoryLoader:
         self.has_db_session.commit()
 
     def run(self):
+        self.has_db_session.execute(text('TRUNCATE fof_expences'))
         self.load_directory_table()
 
