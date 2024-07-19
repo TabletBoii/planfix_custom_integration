@@ -7,6 +7,31 @@ class HasIndustrialObjectsEnum(Enum):
     PAID_CLAIMS = 12503
 
 
+class HasChinaObjectsEnum(Enum):
+    SALARY = 43704
+    PAID_CLAIMS = 43698
+    BUSINESS_TRIP = 43706
+
+
+class HasChinaTaskFieldsEnum(Enum):
+    EXPENSE_ITEM = "104734" #
+    TURNOVER_DATE = "" # У индастриала нет даты совершения оборота (что логично)
+    CURRENCY = "" # У индастриала нет валюты приобретения (что логично)
+    CURRENCY2 = "104732"
+    PROJECT_NAME = "" # У индастриала нет проекта (что логично)
+    PAY_DATE = "104770" #
+    ACQUISITION_COST = "104730" #
+    AMOUNT_TO_PAY = "104740" # Сумма к оплате
+    PAID = "107330" # Оплаченная сумма
+    PAID2 = "104766" #
+    PREPAYMENT = "" # У индастриала нет предоплаты (что логично)
+    PAYMENT_TYPE = "104750" # Вид платежа
+    SUPPLIER = "106130" # Поставщик
+    ORGANIZATION = "" # У индастриала нет организации (что логично)
+    PHOTO_CONFIRMATION = "104762" #
+    INITIATOR = "104728" #
+
+
 class HasIndustrialTaskFieldsEnum(Enum):
     EXPENSE_ITEM = "22545" #
     TURNOVER_DATE = "" # У индастриала нет даты совершения оборота (что логично)

@@ -1,16 +1,12 @@
-import datetime
 from urllib.parse import quote_plus
-
-import requests
 import os
 from dotenv import load_dotenv
-from datetime import datetime, timedelta
-from sqlalchemy.orm import Session
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import create_engine, text, event
+from sqlalchemy import create_engine, text
 from app.directory_loader import DirectoryLoader
 from app.global_loader import HasGlobalExpensesLoader
 from app.industrial_loader import HasIndustrialExpensesLoader
+from app.china_loader import HasChinaExpensesLoader
 
 
 def main():
@@ -34,11 +30,31 @@ def main():
     session_121.execute(text("TRUNCATE planfix_expenses_data;"))
     session_121.commit()
 
-    has_global_loader = HasGlobalExpensesLoader(session_121)
+    has_global_loader = HasGlobalExpensesLoader(
+        session=session_121,
+        url=os.getenv('PLANFIX_URL'),
+        token=os.getenv('PLANFIX_BEARER_TOKEN'),
+        start_date="16-05-2024"
+    )
     has_global_loader.get_task_list()
 
-    has_industrial_loader = HasIndustrialExpensesLoader(session_121)
+    has_industrial_loader = HasIndustrialExpensesLoader(
+        session=session_121,
+        url=os.getenv('PLANFIX_INDUSTRIAL_URL'),
+        token=os.getenv('PLANFIX_INDUSTRIAL_BEARER_TOKEN'),
+        start_date="01-06-2024"
+    )
+
     has_industrial_loader.get_task_list()
+
+    has_china_loader = HasChinaExpensesLoader(
+        session=session_121,
+        url=os.getenv('PLANFIX_CHINA_URL'),
+        token=os.getenv('PLANFIX_CHINA_BEARER_TOKEN'),
+        start_date="01-06-2024"
+    )
+
+    has_china_loader.get_task_list()
 
 
 if __name__ == '__main__':

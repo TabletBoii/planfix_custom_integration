@@ -1,10 +1,10 @@
 import requests
 from utils import Utils
-from enums.planfix_task_fields_enum import HasIndustrialObjectsEnum
+from enums.planfix_task_fields_enum import HasChinaObjectsEnum
 from abstraction.abstract_loader import HasExpensesLoader
 
 
-class HasIndustrialExpensesLoader(HasExpensesLoader):
+class HasChinaExpensesLoader(HasExpensesLoader):
 
     def __init__(self, session, url, token, start_date):
         super().__init__(session, url, token, start_date)
@@ -13,11 +13,11 @@ class HasIndustrialExpensesLoader(HasExpensesLoader):
         return
 
     def fetch_planfix_tasks(self, current_date: str, current_offset: int, get_task_list_url: str) -> None:
-        object_list = [object_enum.value for object_enum in HasIndustrialObjectsEnum]
+        object_list = [object_enum.value for object_enum in HasChinaObjectsEnum]
         while True:
             preprocessed_task_list = []
             print("Выгружаются данные с оффсетом: ", current_offset)
-            post_body = Utils.industrial_from_request_body(
+            post_body = Utils.china_from_request_body(
                 current_date=current_date,
                 offset=current_offset
             )
@@ -40,7 +40,7 @@ class HasIndustrialExpensesLoader(HasExpensesLoader):
                     continue
                 task_dict = Utils.generate_task_dict(
                     task_item=task_item,
-                    organization='ТОО "HAS Industrial"'
+                    organization='China'
                 )
                 self.task_list.append(task_dict)
 

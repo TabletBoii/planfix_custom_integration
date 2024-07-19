@@ -1,21 +1,17 @@
 import os
 
 import requests
-from datetime import datetime, timedelta
 
-from sqlalchemy import insert
-
-from models.models import Expenses
+from abstraction.abstract_loader import HasExpensesLoader
 from sqlalchemy.orm import Session
 
 from utils import Utils
-from enums.planfix_task_fields_enum import HasGlobalTaskTemplateEnum
-from enum import Enum
 
 
-class HasGlobalExpensesLoader:
+class HasGlobalExpensesLoader(HasExpensesLoader):
 
-    def __init__(self, session):
+    def __init__(self, session, url, token, start_date):
+        super().__init__(session, url, token, start_date)
         self.has_db_session: Session = session
         self.PLANFIX_URL = os.getenv('PLANFIX_URL')
         self.PLANFIX_BEARER_TOKEN = os.getenv('PLANFIX_BEARER_TOKEN')
@@ -46,34 +42,9 @@ class HasGlobalExpensesLoader:
                 if not is_claim_name_excluded:
                     continue
                 task_dict = Utils.generate_task_dict(
-                    task_item=task_item
+                    task_item=task_item,
+                    organization=""
                 )
                 self.task_list.append(task_dict)
 
             current_offset += 100
-
-    def get_task_list(self):
-
-        current_date = f"16-05-2024"
-        current_offset = 0
-        print(current_date)
-        # for template in TaskTemplateEnum:
-        #     print(f"Template name: {template.name}")
-        self.fetch_planfix_tasks(
-            current_date=current_date,
-            current_offset=current_offset,
-            get_task_list_url=self.get_task_list_url
-        )
-        print("Database insertion started")
-        self.has_db_session.execute(
-            insert(Expenses),
-            self.task_list
-        )
-        self.has_db_session.commit()
-        print("Script finished successfully")
-        # print(task_list)
-
-    # def set_tasks(self):
-    #
-    # def initial_database_fill(self):
-

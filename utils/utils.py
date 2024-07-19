@@ -1,10 +1,43 @@
 import re
 
 from enums.planfix_task_fields_enum import HasGlobalTaskFieldsEnum, HasGlobalTaskTemplateEnum, \
-    HasIndustrialTaskFieldsEnum
+    HasChinaTaskFieldsEnum, HasIndustrialTaskFieldsEnum
 
 
 class Utils:
+
+    @staticmethod
+    def china_from_request_body(current_date: str, offset: int, page_offset: int = 100) -> dict:
+        fields = ""
+        templates = []
+
+        for enum_index, field_enum in enumerate(HasChinaTaskFieldsEnum):
+            if enum_index == len(HasChinaTaskFieldsEnum):
+                fields += str(field_enum.value)
+            else:
+                fields += str(field_enum.value) + ","
+
+        for field_enum in HasChinaTaskFieldsEnum:
+            templates.append(field_enum.value)
+
+        request_body = {
+            "offset": offset,
+            "pageSize": page_offset,
+            "filters": [
+                {
+                    "type": 103,
+                    "operator": "gt",
+                    "value": {
+                        "dateType": "otherDate",
+                        "dateValue": current_date
+                    },
+                    "field": 104770
+                }
+            ],
+            "fields": "id,name,object," + fields
+        }
+
+        return request_body
 
     @staticmethod
     def industrial_from_request_body(current_date: str, offset: int, page_offset: int = 100) -> dict:
@@ -79,11 +112,10 @@ class Utils:
         return request_body
 
     @staticmethod
-    def generate_task_dict(task_item: dict) -> dict:
+    def generate_task_dict(task_item: dict, organization: str) -> dict:
         splited_task_name = task_item["name"].split(" ")
         if "object" in task_item.keys():
             claim_id = splited_task_name[0]
-            organization = 'ТОО "HAS Industrial"'
         else:
             pattern = re.compile(r'\b\d{6}\b')
             matches = pattern.findall(task_item["name"])
@@ -113,6 +145,7 @@ class Utils:
         except Exception as e:
             print(splited_task_name)
             return
+
         for field in task_item["customFieldData"]:
             match field["field"]["name"]:
 
