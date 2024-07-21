@@ -16,7 +16,7 @@ class HasIndustrialExpensesLoader(HasExpensesLoader):
         object_list = [object_enum.value for object_enum in HasIndustrialObjectsEnum]
         while True:
             preprocessed_task_list = []
-            print("Выгружаются данные с оффсетом: ", current_offset)
+            print("Выгружаюся данные с оффсетом: ", current_offset)
             post_body = Utils.industrial_from_request_body(
                 current_date=current_date,
                 offset=current_offset

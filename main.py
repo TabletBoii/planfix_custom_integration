@@ -7,6 +7,7 @@ from app.directory_loader import DirectoryLoader
 from app.global_loader import HasGlobalExpensesLoader
 from app.industrial_loader import HasIndustrialExpensesLoader
 from app.china_loader import HasChinaExpensesLoader
+from app.industrial_project_loader import IndustrialProjectListLoader
 
 
 def main():
@@ -24,8 +25,17 @@ def main():
     HasSession = sessionmaker(has_db_engine)
     session_121 = HasSession()
 
+    """
+        Запустить, если необходимо обновить справочник статей расходов
+    """
     # directory_loader = DirectoryLoader(session_121)
     # directory_loader.run()
+
+    """
+        Запустить, если необходимо обновить справочник проектов HAS Industrial
+    """
+    # industrial_projects_list_loader = IndustrialProjectListLoader(session_121)
+    # industrial_projects_list_loader.run()
 
     session_121.execute(text("TRUNCATE planfix_expenses_data;"))
     session_121.commit()

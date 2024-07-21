@@ -7,6 +7,19 @@ from enums.planfix_task_fields_enum import HasGlobalTaskFieldsEnum, HasGlobalTas
 class Utils:
 
     @staticmethod
+    def extract_first_6_digits(text: str) -> int:
+        all_digits = re.findall(r'\d', text)
+
+        digits_str = ''.join(all_digits)
+
+        if len(digits_str) == 0:
+            return 0
+
+        claim_id = digits_str[:6]
+
+        return claim_id
+
+    @staticmethod
     def china_from_request_body(current_date: str, offset: int, page_offset: int = 100) -> dict:
         fields = ""
         templates = []
@@ -117,9 +130,9 @@ class Utils:
         if "object" in task_item.keys():
             claim_id = splited_task_name[0]
         else:
-            pattern = re.compile(r'\b\d{6}\b')
-            matches = pattern.findall(task_item["name"])
-            claim_id = splited_task_name[1] if splited_task_name[0] == "Согласование" and splited_task_name[1] != "ведомости" else task_item["id"]
+            claim_result = Utils.extract_first_6_digits(task_item["name"])
+            claim_id = claim_result if claim_result != 0 else task_item["id"]
+            # claim_id = splited_task_name[1] if splited_task_name[0] == "Согласование" and splited_task_name[1] != "ведомости" else task_item["id"]
             organization = ""
         try:
             task_dict = {

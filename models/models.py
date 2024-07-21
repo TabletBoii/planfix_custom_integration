@@ -19,6 +19,15 @@ class FofExpenses(Base):
     planfix_code = Column('planfix_code', String)
 
 
+class IndustrialProjects(Base):
+    __tablename__ = 'industrial_projects'
+
+    id = Column('id', Integer, primary_key=True, autoincrement=True)
+    project_id = Column('project_id', Integer)
+    project_name = Column('project_name', String)
+    description = Column('description', String)
+
+
 class Expenses(Base):
     __tablename__ = "planfix_expenses_data"
 
