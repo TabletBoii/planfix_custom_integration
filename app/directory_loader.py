@@ -10,7 +10,7 @@ class DirectoryLoader:
     def __init__(self, session):
         self.has_db_session: Session = session
         self.PLANFIX_URL = os.getenv("PLANFIX_URL")
-        self.headers = {"Authorization": f"Bearer {os.getenv("PLANFIX_BEARER_TOKEN")}"}
+        self.headers = {"Authorization": f"Bearer {os.getenv('PLANFIX_BEARER_TOKEN')}"}
         self.directory_id = 17112
 
     def check_directory_table(self):
