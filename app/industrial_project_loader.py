@@ -10,7 +10,7 @@ class IndustrialProjectListLoader:
     def __init__(self, session):
         self.has_db_session: Session = session
         self.PLANFIX_URL = os.getenv("PLANFIX_INDUSTRIAL_URL")
-        self.headers = {"Authorization": f"Bearer {os.getenv("PLANFIX_INDUSTRIAL_BEARER_TOKEN")}"}
+        self.headers = {"Authorization": f"Bearer {os.getenv('PLANFIX_INDUSTRIAL_BEARER_TOKEN')}"}
 
     def check_directory_table(self):
         pass
