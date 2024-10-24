@@ -6,8 +6,8 @@ from abstraction.abstract_loader import HasExpensesLoader
 
 class HasChinaExpensesLoader(HasExpensesLoader):
 
-    def __init__(self, session, url, token, start_date):
-        super().__init__(session, url, token, start_date)
+    def __init__(self, session, url, token, start_date, planfix_org):
+        super().__init__(session, url, token, start_date, planfix_org)
 
     def get_planfix_expenses_query(self):
         return
@@ -23,8 +23,12 @@ class HasChinaExpensesLoader(HasExpensesLoader):
             )
 
             response = requests.post(get_task_list_url, headers=self.headers, json=post_body).json()
-            if len(response["tasks"]) == 0:
-                break
+            try:
+                if len(response["tasks"]) == 0:
+                    break
+            except Exception as e:
+                print(response)
+                return
             for task in response["tasks"]:
                 try:
                     if task["object"]["id"] in object_list:
@@ -40,7 +44,8 @@ class HasChinaExpensesLoader(HasExpensesLoader):
                     continue
                 task_dict = Utils.generate_task_dict(
                     task_item=task_item,
-                    organization='China'
+                    organization='China',
+                    planfix_org="china"
                 )
                 self.task_list.append(task_dict)
 

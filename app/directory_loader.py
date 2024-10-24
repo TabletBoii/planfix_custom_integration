@@ -34,7 +34,6 @@ class DirectoryLoader:
             directory_entries_response = requests.post(get_task_list_url, headers=self.headers, json=post_body).json()["directoryEntries"]
             if len(directory_entries_response) == 0:
                 break
-            print(directory_entries_response)
             for directory_entry in directory_entries_response:
                 directory_entry_list.append(
                     FofExpenses(

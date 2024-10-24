@@ -65,9 +65,16 @@ class HasGlobalTaskFieldsEnum(Enum):
     PREPAYMENT = "67246" #
     PAYMENT_TYPE = "67636" # Вид платежа
     SUPPLIER = "87336" # Поставщик
+    SUPPLIER_CH = "85872" # Контрагент (поставщик)
+    CUSTOMER = "67174"
+    CONTRACTOR = "85792"
+    CONTRACTOR2 = "85870"
+    BANK_NAME = "85868"
+    CARRIER = "67176"
     ORGANIZATION = "67112" #
     PHOTO_CONFIRMATION = "86548" #
     INITIATOR = "85928" #
+
 
 
 class HasGlobalTaskTemplateEnum(Enum):

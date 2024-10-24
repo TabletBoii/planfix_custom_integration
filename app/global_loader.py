@@ -10,8 +10,8 @@ from utils import Utils
 
 class HasGlobalExpensesLoader(HasExpensesLoader):
 
-    def __init__(self, session, url, token, start_date):
-        super().__init__(session, url, token, start_date)
+    def __init__(self, session, url, token, start_date, planfix_org):
+        super().__init__(session, url, token, start_date, planfix_org)
         self.has_db_session: Session = session
         self.PLANFIX_URL = os.getenv('PLANFIX_URL')
         self.PLANFIX_BEARER_TOKEN = os.getenv('PLANFIX_BEARER_TOKEN')
@@ -31,11 +31,17 @@ class HasGlobalExpensesLoader(HasExpensesLoader):
                 offset=current_offset
             )
 
-            response = requests.post(get_task_list_url, headers=self.headers, json=post_body).json()
-            if len(response["tasks"]) == 0:
+            response = requests.post(get_task_list_url, headers=self.headers, json=post_body)
+            try:
+                response_json = response.json()
+            except Exception as e:
+                print(e)
+                print(response.text)
+                return
+            if len(response_json["tasks"]) == 0:
                 break
 
-            for task_item in response["tasks"]:
+            for task_item in response_json["tasks"]:
                 is_claim_name_excluded = Utils.exclude_incorrect_claims_by_name(
                     task_name=task_item["name"]
                 )
@@ -43,7 +49,8 @@ class HasGlobalExpensesLoader(HasExpensesLoader):
                     continue
                 task_dict = Utils.generate_task_dict(
                     task_item=task_item,
-                    organization=""
+                    organization="",
+                    planfix_org="global"
                 )
                 self.task_list.append(task_dict)
 

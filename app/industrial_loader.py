@@ -6,8 +6,8 @@ from abstraction.abstract_loader import HasExpensesLoader
 
 class HasIndustrialExpensesLoader(HasExpensesLoader):
 
-    def __init__(self, session, url, token, start_date):
-        super().__init__(session, url, token, start_date)
+    def __init__(self, session, url, token, start_date, planfix_org):
+        super().__init__(session, url, token, start_date, planfix_org)
 
     def get_planfix_expenses_query(self):
         return
@@ -30,6 +30,7 @@ class HasIndustrialExpensesLoader(HasExpensesLoader):
                     if task["object"]["id"] in object_list:
                         preprocessed_task_list.append(task)
                 except KeyError as e:
+                    print(e)
                     continue
 
             for task_item in preprocessed_task_list:
@@ -40,7 +41,8 @@ class HasIndustrialExpensesLoader(HasExpensesLoader):
                     continue
                 task_dict = Utils.generate_task_dict(
                     task_item=task_item,
-                    organization='ТОО "HAS Industrial"'
+                    organization='ТОО "HAS Industrial"',
+                    planfix_org="industrial"
                 )
                 self.task_list.append(task_dict)
 

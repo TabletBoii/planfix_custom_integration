@@ -45,7 +45,10 @@ class Expenses(Base):
     payment_type = Column('payment_type', String)
     project = Column('project', String)
     project_id = Column('project_id', Integer)
+    provider = Column('provider', String) # NEW
     organization = Column('organization', String)
     has_photo_confirmation = Column('has_photo_confirmation', Boolean)
     initiator = Column("initiator", String)
+    supplier = Column('supplier', String)
+    planfix_org = Column('planfix_org', String)
     # template_name = Column("template_name", String)

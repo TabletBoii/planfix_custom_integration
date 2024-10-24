@@ -80,7 +80,7 @@ class Utils:
                     "field": 22905
                 }
             ],
-            "fields": "id,name,object," + fields
+            "fields": "id,name,object,project," + fields
         }
 
         return request_body
@@ -125,7 +125,7 @@ class Utils:
         return request_body
 
     @staticmethod
-    def generate_task_dict(task_item: dict, organization: str) -> dict:
+    def generate_task_dict(task_item: dict, organization: str, planfix_org: str) -> dict:
         splited_task_name = task_item["name"].split(" ")
         if "object" in task_item.keys():
             claim_id = splited_task_name[0]
@@ -148,14 +148,17 @@ class Utils:
                 "acquisition_cost": None,
                 "payment_type": "",
                 "project": "",
-                "project_id": None,
+                "project_id": task_item["project"]["id"] if organization == 'ТОО "HAS Industrial"' else None,
                 "provider": "",
                 "organization": organization,
                 "has_photo_confirmation": True,
-                "initiator": ""
+                "initiator": "",
+                "supplier": "",
+                "planfix_org": planfix_org
             }
 
         except Exception as e:
+            print(e)
             print(splited_task_name)
             return
 
@@ -173,9 +176,15 @@ class Utils:
                 case "Валюта приобретения" | "Валюта":
                     task_dict["currency"] = field["value"]
                 case "Сумма к оплате":
-                    task_dict["amount_to_pay"] = field["value"]
+                    try:
+                        task_dict["amount_to_pay"] = field["value"]
+                    except Exception as e:
+                        task_dict["amount_to_pay"] = 0
                 case "Оплаченная сумма" | "Оплачено" | "Сумма предоплаты перевозчику":
-                    task_dict["paid"] = field["value"]
+                    try:
+                        task_dict["paid"] = field["value"]
+                    except Exception as e:
+                        task_dict["paid"] = 0
                 case "Стоимость приобретения":
                     task_dict["acquisition_cost"] = field["value"]
                 case "Вид платежа":
@@ -185,9 +194,10 @@ class Utils:
                     task_dict["project_id"] = None if isinstance(field["value"], str) else field["value"]["id"]
                 case "Организация":
                     task_dict["organization"] = field["stringValue"]
-                case "Поставщик":
-                    task_dict["provider"] = "" if isinstance(field["stringValue"], str) else field["value"][
-                        "name"]
+                case "Заказчик" "Наименование банка" | "Контрагент (наименование)":
+                    task_dict["provider"] = field["stringValue"] if isinstance(field["stringValue"], str) else field["value"]["name"]
+                case "Поставщик" | "Контрагент/поставщик":
+                    task_dict["supplier"] = field["stringValue"] if isinstance(field["stringValue"], str) else field["value"]["name"]
                 case "Прикрепить фотоподтверждение":
                     task_dict["has_photo_confirmation"] = True if field["stringValue"] != "" else False
                 case "Инициатор":
